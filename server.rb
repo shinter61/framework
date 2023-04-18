@@ -1,5 +1,6 @@
 require 'socket'
 require 'pry'
+require_relative 'status_codes'
 
 class Server
   PORT = 3000
@@ -27,7 +28,7 @@ class Server
       end
       p req_headers
 
-      conn.puts("HTTP/1.1 #{status} OK")
+      conn.puts("HTTP/1.1 #{status} #{STATUS_CODES[status]}")
       res_headers.each_pair do |name, value|
         conn.puts("#{name}: #{value}")
       end
