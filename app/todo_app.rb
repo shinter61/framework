@@ -10,7 +10,17 @@ module App
     def call(request:)
       status = 200
       headers = {"Content-Type" => "application/json"}
-      response = self.delete(id: 3)
+
+      case request[:method]
+      when 'GET' then
+        response = self.list
+      when 'POST' then
+        response = self.post
+      when 'PUT' then
+        response = self.put
+      when 'DELETE' then
+        response = self.delete(id: 1)
+      end
 
       [response[:status],headers,response[:body]]
     end

@@ -19,7 +19,12 @@ class Server
     socket = listen_on_socket
     loop do #新しいコネクションを継続的にリッスンする
       conn = socket.accept #_で始まる変数は使わない変数って慣習
-      status, res_headers, body = app.call(request: {})
+      status, res_headers, body = app.call(request: {
+        method: 'GET',
+        host: 'localhost',
+        path: '/',
+        params: ''
+      })
 
       # request headerの読み込み
       req_headers = []
