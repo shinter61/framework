@@ -1,6 +1,7 @@
 require 'socket'
 require 'pry'
 require_relative 'status_codes'
+require_relative 'app/todo_app'
 
 class Server
   PORT = 3000
@@ -18,7 +19,7 @@ class Server
     socket = listen_on_socket
     loop do #新しいコネクションを継続的にリッスンする
       conn = socket.accept #_で始まる変数は使わない変数って慣習
-      status, res_headers, body = app.call
+      status, res_headers, body = app.call(request: {})
 
       # request headerの読み込み
       req_headers = []
@@ -33,6 +34,7 @@ class Server
         conn.puts("#{name}: #{value}")
       end
       conn.puts("")
+      conn.puts("status: #{status}")
       conn.puts("#{body}")
 
     rescue => e
@@ -52,14 +54,4 @@ class Server
   end
 end
 
-class Application
-  def call
-    status = 200
-    headers = {"Content-Type" => "text/html"}
-    body = ["Yay, your first web application! <3"]
-
-    [status,headers,body]
-  end
-end
-
-Server.new(Application.new).start
+Server.new(App::TodoApp.new).start
